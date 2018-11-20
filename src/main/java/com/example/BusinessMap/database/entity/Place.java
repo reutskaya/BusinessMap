@@ -1,6 +1,7 @@
 package com.example.BusinessMap.database.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,19 +11,20 @@ public class Place {
     @Id
     private String id;
     private String name;
-    private String coordinate;
+    //   @Indexed(name = "location_index", direction = )
+    private Point location;
     private BisenessType bisenessType;
-    private int rating;
+    private double rating;
     @Indexed(direction = IndexDirection.ASCENDING)
     private int price;
 
     protected Place(){
     }
 
-    public Place(final String name, final String coordinate, final BisenessType bisenessType, final int rating, final int price){
-        //this.id = id;
+    public Place( String name, Point location, BisenessType bisenessType, double rating, int price){
+
         this.name = name;
-        this.coordinate = coordinate;
+        this.location = location;
         this.bisenessType = bisenessType;
         this.rating = rating;
         this.price = price;
@@ -44,12 +46,12 @@ public class Place {
         this.name = name;
     }
 
-    public String getCoordinate() {
-        return coordinate;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setCoordinate(String coordinate) {
-        this.coordinate = coordinate;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public BisenessType getBisenessType() {
@@ -60,11 +62,11 @@ public class Place {
         this.bisenessType = bisenessType;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
@@ -81,7 +83,7 @@ public class Place {
         return "Places{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", coordinate='" + coordinate + '\'' +
+                ", coordinate='" + location + '\'' +
                 ", bisenessType='" + bisenessType + '\'' +
                 ", rating='" + rating + '\'' +
                 ", price=" + price +

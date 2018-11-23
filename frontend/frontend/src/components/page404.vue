@@ -20,7 +20,7 @@ export default {
 
 <style lang="css">
 .notfound {
-  margin: -60px;
+  margin: 0;
   height: 850px;
   background-image: url("../assets/background404.jpg");
   background-size: cover;

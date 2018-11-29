@@ -1,4 +1,4 @@
-package com.example.BusinessMap.database;
+package com.example.BusinessMap.database.repositories;
 
 
 import com.example.BusinessMap.database.entity.Place;
@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface PlaceRepository extends MongoRepository<Place, String> {
-    // { 'location' : { '$near' : [point.x, point.y], '$maxDistance' : distance}}
     List<Place> findByLocationNear(Point location, Distance distance);
 }
 

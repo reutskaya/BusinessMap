@@ -1,7 +1,9 @@
 package com.example.BusinessMap.database;
 
-import com.example.BusinessMap.database.entity.BisenessType;
+import com.example.BusinessMap.database.entity.Type;
 import com.example.BusinessMap.database.entity.Place;
+import com.example.BusinessMap.database.repositories.PlaceRepository;
+import com.example.BusinessMap.database.repositories.TypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.geo.Point;
@@ -12,11 +14,14 @@ import java.util.List;
 
 @Component
 public class DbSeeder implements CommandLineRunner {
-    private final PlaceRepository placeRepository;
-
     @Autowired
+    private PlaceRepository placeRepository;
+    @Autowired
+    private TypeRepository typeRepository;
+
     public DbSeeder(PlaceRepository placeRepository) {
         this.placeRepository = placeRepository;
+        this.typeRepository = typeRepository;
     }
 
     @Override
@@ -25,7 +30,6 @@ public class DbSeeder implements CommandLineRunner {
      /*   System.out.println("######PLACES LIST AT BEGINNING######");
         System.out.println(placeRepository.findAll());
         System.out.println("###################################\n\n");
-
         // drop all places
         System.out.println("######NOW I DELETE ALL PLACES######\n\n");
         this.placeRepository.deleteAll(); */
@@ -33,23 +37,24 @@ public class DbSeeder implements CommandLineRunner {
         System.out.println("######ADDING 2 PLACES######");
 
         Place i5 = new Place(
-                "Голубая Устрица",
-                new Point(59.931920, 30.327925),
-                new BisenessType("Karaoke"),
-                999,
-                999
+                "Friends Time",
+                new Point(59.935939, 30.359860),
+                new Type("Karaoke"),
+                5,
+                1000
         );
 
-        List<Place> placesList = new ArrayList<>();
-        placesList.add(i5);
+        //  List<Place> placesList = new ArrayList<>();
+        //   placesList.add(i5);
+        //   placeRepository.saveAll(placesList);
 
-        System.out.println(Querys.getOnlyNeed(placeRepository).toString());
-        //    placeRepository.saveAll(placesList);
+//        System.out.println(Querys.getOnly(placeRepository, bisenessTypeRepository));
 
+        List<Type> types = typeRepository.findAll();
 
-     /*   System.out.println("######PLACES LIST AFTER ADDING######");
-        System.out.println(placeRepository.findAll());
-        System.out.println("###################################\n\n");   */ }
+        System.out.println("######PLACES LIST AFTER ADDING######");
+     //   System.out.println(Querys.getPlaces(placeRepository, typeRepository));
+        System.out.println("###################################\n\n");
+    }
 
 }
-

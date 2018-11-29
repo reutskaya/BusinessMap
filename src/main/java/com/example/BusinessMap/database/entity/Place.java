@@ -13,7 +13,7 @@ public class Place {
     private String name;
     //   @Indexed(name = "location_index", direction = )
     private Point location;
-    private BisenessType bisenessType;
+    private Type type;
     private double rating;
     @Indexed(direction = IndexDirection.ASCENDING)
     private int price;
@@ -21,11 +21,11 @@ public class Place {
     protected Place(){
     }
 
-    public Place( String name, Point location, BisenessType bisenessType, double rating, int price){
+    public Place( String name, Point location, Type type, double rating, int price){
 
         this.name = name;
         this.location = location;
-        this.bisenessType = bisenessType;
+        this.type = type;
         this.rating = rating;
         this.price = price;
     }
@@ -54,12 +54,12 @@ public class Place {
         this.location = location;
     }
 
-    public BisenessType getBisenessType() {
-        return bisenessType;
+    public String getType() {
+        return type.getName();
     }
 
-    public void setBisenessType(BisenessType bisenessType) {
-        this.bisenessType = bisenessType;
+    public void setBisenessType(Type type) {
+        this.type = type;
     }
 
     public double getRating() {
@@ -84,7 +84,7 @@ public class Place {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", coordinate='" + location + '\'' +
-                ", bisenessType='" + bisenessType + '\'' +
+                ", type='" + type + '\'' +
                 ", rating='" + rating + '\'' +
                 ", price=" + price +
                 '}';

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Header from './components/Header'
 import Map from './components/Map'
 import page404 from './components/page404'
+import Card from './components/Card'
 
 Vue.use(VueRouter);
 
@@ -25,6 +26,11 @@ export default new VueRouter({
       path:'/head',
       name: 'head',
       component: Header
+    },
+    {
+      path:'/card',
+      name: 'card',
+      component: Card
     },
 
     //Любой левый URL кидает на Home

@@ -1,4 +1,5 @@
 <template>
+  <v-layout align-start justify-start column fill-height>
   <div id="header">
     <h3 id="logo">Business Map</h3>
     <h1 id="headline">Начни свой бизнес уже сейчас</h1>
@@ -6,15 +7,18 @@
       <b-button class="btn" v-on:click="scroll">
         <span id="button-text">Начать</span>
       </b-button>
-    <mapa/>
+      <mapa/>
+      <card/>
   </div>
+  </v-layout>
 </template>
 
 <script>
   import mapa from './Map'
+  import card from './Card'
   export default {
     name: 'header',
-    components: {mapa},
+    components: {mapa, card},
     methods:{
       scroll: function () {
         window.scrollTo(0, 777)

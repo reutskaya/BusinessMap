@@ -53,7 +53,7 @@ public class DbSeeder implements CommandLineRunner {
         List<Type> types = typeRepository.findAll();
 
         System.out.println("######PLACES LIST AFTER ADDING######");
-     //   System.out.println(Querys.getPlaces(placeRepository, typeRepository));
+        System.out.println(Querys.getPlaces(placeRepository, typeRepository, 59.932229, 30.330791, 50));
         System.out.println("###################################\n\n");
     }
 

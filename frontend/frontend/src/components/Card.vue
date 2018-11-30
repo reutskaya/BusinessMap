@@ -1,6 +1,8 @@
 <template>
+
   <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
+    <div id="card">
+
       <v-card>
         <v-img
           src="src\assets\roman-kraft-156096-unsplash.jpg"
@@ -14,13 +16,20 @@
           </div>
         </v-card-title>
 
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="show = !show">
+            <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+          </v-btn>
+        </v-card-actions>
+
         <v-slide-y-transition>
           <v-card-text v-show="show">
             Тут будет анализ
           </v-card-text>
         </v-slide-y-transition>
       </v-card>
-    </v-flex>
+    </div>
   </v-layout>
 </template>
 
@@ -29,5 +38,12 @@
 </script>
 
 <style scoped>
-
+  #card {
+    position: absolute;
+    height: 1000px;
+    width: auto;
+    left: 0px;
+    right: 0px;
+    top: 1700px;
+  }
 </style>

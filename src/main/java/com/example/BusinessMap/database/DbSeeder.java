@@ -9,9 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 public class DbSeeder implements CommandLineRunner {
     @Autowired
@@ -19,7 +16,7 @@ public class DbSeeder implements CommandLineRunner {
     @Autowired
     private TypeRepository typeRepository;
 
-    public DbSeeder(PlaceRepository placeRepository) {
+    public DbSeeder(PlaceRepository placeRepository, TypeRepository typeRepository) {
         this.placeRepository = placeRepository;
         this.typeRepository = typeRepository;
     }
@@ -50,11 +47,16 @@ public class DbSeeder implements CommandLineRunner {
 
 //        System.out.println(Querys.getOnly(placeRepository, bisenessTypeRepository));
 
-        List<Type> types = typeRepository.findAll();
 
-        System.out.println("######PLACES LIST AFTER ADDING######");
-        System.out.println(Querys.getPlaces(placeRepository, typeRepository, 59.932229, 30.330791, 50));
-        System.out.println("###################################\n\n");
+        Parser parser = new Parser(placeRepository,typeRepository);
+        parser.parse();
+
+        //List<Type> types = typeRepository.findAll();
+
+        //System.out.println("######PLACES LIST AFTER ADDING######");
+        //   System.out.println(Querys.getPlaces(placeRepository, typeRepository));
+        //System.out.println("###################################\n\n");
     }
 
+}
 }

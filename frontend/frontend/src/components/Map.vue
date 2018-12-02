@@ -21,29 +21,9 @@
      >
        <ymap-marker
          marker-id="1"
-         marker-type="placemark"
-         :coords="[54.7, 39.7]"
-         hint-content="Hint content 1"
-         :balloon="{header: 'header', body: 'body', footer: 'footer'}"
-         :icon="{color: 'green', glyph: 'cinema'}"
-         cluster-name="1"
-       ></ymap-marker>
-
-       <ymap-marker
-         marker-id="2"
-         marker-type="placemark"
-         :coords="[54.6, 39.8]"
-         hint-content="Hint content 1"
-         :balloon="{header: 'header', body: 'body', footer: 'footer'}"
-         :icon="{color: 'green', glyph: 'cinema'}"
-         cluster-name="1"
-       ></ymap-marker>
-
-       <ymap-marker
-         marker-id="3"
          marker-type="circle"
          :coords="[54.62896654088406, 39.731893822753904]"
-         circle-radius="1600"
+         circle-radius="1000"
          hint-content="Hint content 1"
          :marker-fill="{color: '#000000', opacity: 0.4}"
          :marker-stroke="{color: '#ffe222', width: 5}"
@@ -87,6 +67,37 @@
     components: { yandexMap, ymapMarker }
   });*/
 
+/*
+  myCircle = new ymaps.Circle([
+    // Координаты центра круга.
+    [55.76, 37.60],
+    // Радиус круга в метрах.
+    radius
+  ], {
+    // Описываем свойства круга.
+    // Содержимое балуна.
+    balloonContent: "Радиус круга - 10 км",
+    // Содержимое хинта.
+    hintContent: "Подвинь меня"
+  }, {
+    // Задаем опции круга.
+    // Включаем возможность перетаскивания круга.
+    draggable: true,
+    // Цвет заливки.
+    // Последний байт (77) определяет прозрачность.
+    // Прозрачность заливки также можно задать используя опцию "fillOpacity".
+    fillColor: "#DB709377",
+    // Цвет обводки.
+    strokeColor: "#990066",
+    // Прозрачность обводки.
+    strokeOpacity: 0.8,
+    // Ширина обводки в пикселях.
+    strokeWidth: 5
+  });
+
+  // Добавляем круг на карту.
+  mapa.geoObjects.add(myCircle);*/
+
   export default {
     name: 'map-area',
     data()
@@ -110,7 +121,8 @@
     methods:{
       select: function (r) {
         this.radius = r
-      }
+      },
+
     }
   }
 </script>

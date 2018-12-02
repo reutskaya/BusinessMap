@@ -30,7 +30,8 @@ public class Querys {
         JsonObject mainObject = new JsonObject(); // создаем главный объект
         JsonObject rootObject = new JsonObject(); // создаем главный объект
         JsonObject childObject = new JsonObject(); // создаем объект Type
-        List<String> category = Arrays.asList("Food", "Entertainment", "Hotel", "Store", "Beauty", "Health");//В общие константы проекта
+        List<String> category = Arrays.asList("Food", "Entertainment", "Hotel", "Store", "Beauty", "Health");
+      
         StringBuilder builder = new StringBuilder();
         String rez = "";
         int sumPlace = 0;
@@ -38,6 +39,7 @@ public class Querys {
         double reit = 0;
         double price = 0;
         Point point = new Point(x, y);
+      
                 // например 59.932229, 30.330791
         Distance distance = new Distance(km, Metrics.KILOMETERS);
                 // например 50

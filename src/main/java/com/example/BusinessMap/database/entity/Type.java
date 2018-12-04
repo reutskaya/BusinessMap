@@ -13,8 +13,9 @@ public class Type {
     protected Type(){
     }
 
-    public Type(String name){
+    public Type(String name, String category){
         this.name = name;
+        this.category = category;
     }
 
     public String getId() {

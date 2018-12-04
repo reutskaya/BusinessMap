@@ -1,7 +1,7 @@
 package com.example.BusinessMap.database;
 
-import com.example.BusinessMap.database.entity.Place;
 import com.example.BusinessMap.database.entity.Type;
+import com.example.BusinessMap.database.entity.Place;
 import com.example.BusinessMap.database.repositories.PlaceRepository;
 import com.example.BusinessMap.database.repositories.TypeRepository;
 import com.example.BusinessMap.parser.Parser;
@@ -27,20 +27,25 @@ public class DbSeeder implements CommandLineRunner {
 
      /*   System.out.println("######PLACES LIST AT BEGINNING######");
         System.out.println(placeRepository.findAll());
-        System.out.println("###################################\n\n");
+        System.out.println("###################################\n\n");*/
+
         // drop all places
         System.out.println("######NOW I DELETE ALL PLACES######\n\n");
-        this.placeRepository.deleteAll(); */
+        this.placeRepository.deleteAll();
+        this.typeRepository.deleteAll();
 
         System.out.println("######ADDING 2 PLACES######");
 
         Place i5 = new Place(
                 "Friends Time",
                 new Point(59.935939, 30.359860),
-                new Type("Karaoke"),
+                new Type("Karaoke", "Entertaiment"),
                 5,
                 1000
         );
+
+        //добавляем все типы в базу. делаем это только один раз!
+
 
         //  List<Place> placesList = new ArrayList<>();
         //   placesList.add(i5);
@@ -48,8 +53,8 @@ public class DbSeeder implements CommandLineRunner {
 
 //        System.out.println(Querys.getOnly(placeRepository, bisenessTypeRepository));
 
-        Parser parser = new Parser(placeRepository,typeRepository);
-        parser.parse();
+        //Parser parser = new Parser(placeRepository,typeRepository);
+        //parser.parse();
 
         //List<Type> types = typeRepository.findAll();
 
@@ -59,4 +64,3 @@ public class DbSeeder implements CommandLineRunner {
     }
 
 }
-

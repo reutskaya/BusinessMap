@@ -207,8 +207,8 @@
 
   #c1{
     position: absolute;
-    left: 63.07%;
-    right: 34.28%;
+    left: 67.25%;
+    right: 30.11%;
     top: 47.47%;
     bottom: 47.47%;
     border-radius: 38px;
@@ -216,8 +216,8 @@
 
   #c2{
     position: absolute;
-    left: 69.81%;
-    right: 25.88%;
+    left: 72.39%;
+    right: 23.3%;
     top: 45.88%;
     bottom: 45.88%;
     border-radius: 62px;
@@ -225,8 +225,8 @@
 
   #c3{
     position: absolute;
-    left: 79.35%;
-    right: 14.88%;
+    left: 79.21%;
+    right: 15.02%;
     top: 44.41%;
     bottom: 44.55%;
     border-radius: 83px;
@@ -234,8 +234,8 @@
 
 #c4{
   position: absolute;
-  left: 90.43%;
-  right: 1.43%;
+  left: 87.48%;
+  right: 4.38%;
   top: 42.15%;
   bottom: 42.29%;
   border-radius: 117px;

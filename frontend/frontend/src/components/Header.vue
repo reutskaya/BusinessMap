@@ -53,7 +53,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin: 0px;
+    margin: 0;
     height: 850px;
     background: url("../assets/1.jpg") no-repeat center center;
     background-size: cover;
@@ -122,7 +122,7 @@
 
     width: 331px;
     height: 88px;
-    border:solid 4px #000000;
+    border:solid 4px rgba(0, 0, 0, 0.63);
 
     font: 24px Montserrat, serif;
     font-style: normal;
@@ -149,5 +149,6 @@
     line-height: normal;
     text-align: center;
     text-underline: none;
+    color: #000000;
   }
 </style>

@@ -4,7 +4,6 @@ import com.example.BusinessMap.database.entity.Type;
 import com.example.BusinessMap.database.entity.Place;
 import com.example.BusinessMap.database.repositories.PlaceRepository;
 import com.example.BusinessMap.database.repositories.TypeRepository;
-import com.example.BusinessMap.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.geo.Point;
@@ -55,6 +54,7 @@ public class DbSeeder implements CommandLineRunner {
 
         //Parser parser = new Parser(placeRepository,typeRepository);
         //parser.parse();
+
 
         //List<Type> types = typeRepository.findAll();
 

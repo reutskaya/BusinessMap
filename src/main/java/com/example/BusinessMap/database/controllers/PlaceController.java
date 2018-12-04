@@ -7,10 +7,8 @@ import com.example.BusinessMap.database.repositories.TypeRepository;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -20,8 +18,9 @@ public class PlaceController {
     private PlaceRepository placeRepository;
     private TypeRepository typeRepository;
 
-    public PlaceController(PlaceRepository placeRepository) {
+    public PlaceController(PlaceRepository placeRepository, TypeRepository typeRepository) {
         this.placeRepository = placeRepository;
+        this.typeRepository = typeRepository;
     }
 
     @GetMapping("/all")

@@ -1,11 +1,7 @@
 <template>
-  <v-app>
-    <v-content>
     <div id="app">
       <router-view/>
     </div>
-      </v-content>
-  </v-app>
 </template>
 
 <script>
@@ -26,7 +22,7 @@
     background-size: cover;
   }
 
-  b-button{
+/*  b-button{
     width: 331px;
     height: 88px;
     padding: auto;
@@ -41,5 +37,5 @@
     background:transparent;
   }
 
-  b-button:hover{ background:#F8D701; }
+  b-button:hover{ background:#F8D701; }*/
 </style>

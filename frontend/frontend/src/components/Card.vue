@@ -1,26 +1,27 @@
 <template>
   <div id="card">
     <div id="с1" class="rectangle"><img src="../assets/Food.jpg" height="325" width="440"/>
-      <h2 @click="toggle"><span>ЕДА</span></h2>
+      <h2 @click="toggle"><span>{{ category.name }}</span></h2>
       <transition name="fade">
-      <div class = "message" v-if="visible">Я анализ</div>
+        <div class = "message" v-if="visible">
+          <div v-bind:key="type.name" v-for="type in category.types">
+            <h6>{{ type.name }}, {{ type.col }}, {{ type.reit }}, {{ type.price }},</h6>
+            <br>
+          </div>
+        </div>
+        <br>
     </transition>
     </div>
-    <div id="с2" class="rectangle"><img src="../assets/Entertainment.jpg" height="325" width="440"/> <h2><span>РАЗВЛЕЧЕНИЯ</span></h2></div>
-    <div id="с3" class="rectangle"><img src="../assets/Hotel.jpg" height="325" width="440"/> <h2><span>ГОСТИНИЦЫ</span></h2></div>
-    <div id="с4" class="rectangle"><img src="../assets/Store.jpg" height="325" width="440"/> <h2><span>ПОКУПКИ</span></h2></div>
-    <div id="с5" class="rectangle"><img src="../assets/Beauty.jpg" height="325" width="440"/> <h2><span>КРАСОТА</span></h2></div>
-    <div id="с6" class="rectangle"><img src="../assets/Health.jpg" height="325" width="440"/> <h2><span>ЗДОРОВЬЕ</span></h2></div>
   </div>
 </template>
 
 <script>
-export default {
-  data(){
-    return{
-      visible: false
-    }
-  },
+
+  export default {
+    name : "Card",
+    props: {
+      category: null
+    },
   methods: {
     toggle: function () {
       this.visible = !this.visible

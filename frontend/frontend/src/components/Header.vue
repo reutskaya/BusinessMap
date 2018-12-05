@@ -1,8 +1,7 @@
 <template>
-  <v-layout align-start justify-start column fill-height>
   <div id="header">
     <h3 id="logo">Business Map</h3>
-    <h1 id="headline">Начни свой бизнес уже сейчас</h1>
+    <h1 id="myheadline">Начни свой бизнес уже сейчас</h1>
     <h1 id="subgolem">А мы поможем тебе изучить рынок и выбрать нишу для бизнеса</h1>
       <b-button class="btn" v-on:click="scroll">
         <span id="button-text">Начать</span>
@@ -10,7 +9,6 @@
       <mapa/>
       <card/>
   </div>
-  </v-layout>
 </template>
 
 <script>
@@ -83,12 +81,12 @@
 
   }
   
-  #headline {
+  #myheadline {
     position: absolute;
-    left: 35.14%;
+    /*left: 35.14%;*/
     right: 7.92%;
     top: 46.96%;
-    bottom: 34.37%;
+    /*bottom: 34.37%;*/
 
     font-family: Merriweather,serif;
     font-style: normal;
@@ -102,10 +100,10 @@
 
   #subgolem{
     position: absolute;
-    left: 41.53%;
+    /*left: 41.53%;*/
     right: 14.31%;
     top: 58.46%;
-    bottom: 36.67%;
+    /*bottom: 36.67%;*/
 
     font-family: Montserrat,serif;
     font-style: normal;
@@ -119,10 +117,10 @@
 
   .btn{
     position: absolute;
-    left: 54.17%;
+    /*left: 54.17%;*/
     right: 26.94%;
     top: 69.28%;
-    bottom: 24.76%;
+    /*bottom: 24.76%;*/
 
     width: 331px;
     height: 88px;

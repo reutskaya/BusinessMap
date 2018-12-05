@@ -5,6 +5,7 @@ import com.example.BusinessMap.database.entity.Place;
 import com.example.BusinessMap.database.repositories.PlaceRepository;
 import com.example.BusinessMap.database.repositories.TypeRepository;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.springframework.data.geo.Distance;
@@ -27,12 +28,9 @@ public class Querys {
 
     public static String getPlaces(PlaceRepository placeRepository, TypeRepository typeRepository, double x, double y, int km
     ) {
-        JsonObject mainObject = new JsonObject(); // создаем главный объект
-        JsonObject rootObject = new JsonObject(); // создаем главный объект
-        JsonObject childObject = new JsonObject(); // создаем объект Type
+        JsonArray mainObject = new JsonArray();// создаем главный объект
         List<String> category = Arrays.asList("Food", "Entertainment", "Hotel", "Store", "Beauty", "Health");
-      
-        StringBuilder builder = new StringBuilder();
+
         String rez = "";
         int sumPlace = 0;
         int sumType = 0;
@@ -45,23 +43,26 @@ public class Querys {
                 // например 50
         List<Place> places = placeRepository.findByLocationNear(point, distance);
         for (int f = 0; f < category.size(); f++) {
+            JsonArray array = new JsonArray();
+            JsonObject rootObject = new JsonObject(); // создаем главный объект
+
             List<Type> bisenessTypes = typeRepository.findByCategory(category.get(f));
             System.out.println(bisenessTypes.size());
                 rootObject.addProperty("name", category.get(f));
                 rootObject.addProperty("types", 0);
                 rootObject.addProperty("name", category.get(f));
 
-                for (int i = 0; i < bisenessTypes.size(); i++) {
-                    String type = bisenessTypes.get(i).getName();
-                    for (int q = 0; q < places.size(); q++) {
-                        String place = places.get(q).getType();
-                        if (type.equals(place)) {
-                            sumPlace = sumPlace + 1;
-                            reit = reit + places.get(q).getRating();
-                            price = price + places.get(q).getPrice();
-                        }
+            for (int i = 0; i < bisenessTypes.size(); i++) {
+                JsonObject childObject = new JsonObject(); // создаем объект Type
+                String type = bisenessTypes.get(i).getName();
+                for (int q = 0; q < places.size(); q++) {
+                    String place = places.get(q).getType();
+                    if (type.equals(place)) {
+                        sumPlace = sumPlace + 1;
+                        reit = reit + places.get(q).getRating();
+                        price = price + places.get(q).getPrice();
                     }
-                    //   builder.append("[").append(type).append(" col:").append(sumPlace);
+                        //   builder.append("[").append(type).append(" col:").append(sumPlace);
                     childObject.addProperty("name", type);
                     childObject.addProperty("col", sumPlace);
                     if (reit / sumPlace > 0) {
@@ -84,19 +85,21 @@ public class Querys {
                     reit = 0;
                     price = 0;
                 }
+                sumType = sumType + sumPlace;
+                sumPlace = 0;
+                reit = 0;
+                price = 0;
+                array.add(childObject);
             }
 
-                //  builder.append("totalCol:").append(sumType).append("] \n");
-                rootObject.addProperty("totalCol", sumType);
-
-                rootObject.add("types", childObject); // сохраняем дочерний объект в поле "type"
-//TODO обнулить обьект                childObject.remove("reit");
-                sumType = 0;
-                Gson gson = new Gson();
-                rez = gson.toJson(rootObject); // генерация json строки
-                builder.append(rez);
-
-            rez = builder.toString();
+            //  builder.append("totalCol:").append(sumType).append("] \n");
+            rootObject.addProperty("totalCol", sumType);
+            rootObject.add("types", array); // сохраняем дочерний объект в поле "type"
+            sumType = 0;
+            mainObject.add(rootObject);
+            Gson gson = new Gson();
+            rez = gson.toJson(mainObject); // генерация json строки
+        }
         return rez;
     }
 }

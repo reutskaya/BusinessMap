@@ -52,17 +52,19 @@
        </div>
      </div>
 
-     <h1 class="headline" id="hl2">размер области поиска {{radius}}</h1>
-
-     <b-button class="btn">
+     <b-button class="btn" v-on:click="find">
        <span id="button-text">Анализ области</span>
      </b-button>
-
+     <div v-if="response != null">
+       <card v-bind:category="parseCategory('Food')"/>
+     </div>
    </div>
 </template>
 
 <script>
   import { yandexMap, ymapMarker } from 'vue-yandex-maps'
+  import Card from "./Card"
+  import axios from 'axios';
   /*new Vue({
     components: { yandexMap, ymapMarker }
   });*/
@@ -100,6 +102,7 @@
 
   export default {
     name: 'map-area',
+    components: {Card},
     data()
     {
       return {
@@ -115,13 +118,26 @@
         ],
         address: '',
         value: 25,
-        radius:''
+        radius:'',
+        response: null
       }
     },
     methods:{
       select: function (r) {
         this.radius = r
       },
+      find : function () {
+        axios
+          .get(`http://localhost:8080/places/59.932229/30.330791/50`)
+          .then(response2 => (this.response = response2.data));
+      },
+      parseCategory : function (category) {
+        if (this.response!= null){
+          return this.response.filter(function (item) {
+            return item.name == category;
+          })[0]
+        }
+      }
 
     }
   }
@@ -142,7 +158,7 @@
   .headline{
     font-family: Montserrat,serif;
     font-style: normal;
-    font-weight: 500;
+    /*font-weight: 500;*/
     line-height: normal;
     font-size: 24px;
     text-align: center;
@@ -194,8 +210,8 @@
 
   .circle{
     background: rgba(248, 215, 1, 0.46);
-    -moz-border-radius: 50px;
-    -webkit-border-radius: 50px;
+    /*-moz-border-radius: 50px;
+    -webkit-border-radius: 50px;*/
     border: 2px solid #ffe222;
   }
 
@@ -207,37 +223,44 @@
 
   #c1{
     position: absolute;
-    left: 67.25%;
+    height: 38px;
+    width: 38px;
+    /*left: 67.25%;*/
     right: 30.11%;
     top: 47.47%;
-    bottom: 47.47%;
+   /* bottom: 47.47%;*/
     border-radius: 38px;
   }
 
   #c2{
     position: absolute;
-    left: 72.39%;
+    height: 62px;
+    width: 62px;
+    /*left: 72.39%;*/
     right: 23.3%;
     top: 45.88%;
-    bottom: 45.88%;
+    /*bottom: 45.88%;*/
     border-radius: 62px;
   }
 
   #c3{
     position: absolute;
-    left: 79.21%;
+    height: 83px;
+    width: 83px;
+    /*left: 79.21%;*/
     right: 15.02%;
     top: 44.41%;
-    bottom: 44.55%;
+    /*bottom: 44.55%;*/
     border-radius: 83px;
   }
-
-#c4{
+  #c4{
   position: absolute;
-  left: 87.48%;
+  height: 117px;
+  width: 117px;
+  /*left: 87.48%;*/
   right: 4.38%;
   top: 42.15%;
-  bottom: 42.29%;
+  /*bottom: 42.29%;*/
   border-radius: 117px;
 }
 

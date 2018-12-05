@@ -49,6 +49,8 @@ public class Parser {
         List<Place> placesAlreadyExist = this.placeRepository.findAll();
         List<Place> newPlacesToAdd = new ArrayList<>();
 
+
+
         //определяем, сколько страниц выдал поиск по данному типу
         int lastPage = 0;
         try {

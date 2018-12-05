@@ -4,6 +4,7 @@ import com.example.BusinessMap.database.entity.Type;
 import com.example.BusinessMap.database.entity.Place;
 import com.example.BusinessMap.database.repositories.PlaceRepository;
 import com.example.BusinessMap.database.repositories.TypeRepository;
+import com.example.BusinessMap.parser.StaticMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.geo.Point;
@@ -29,11 +30,13 @@ public class DbSeeder implements CommandLineRunner {
         System.out.println("###################################\n\n");*/
 
         // drop all places
-        System.out.println("######NOW I DELETE ALL PLACES######\n\n");
-        this.placeRepository.deleteAll();
-        this.typeRepository.deleteAll();
+        //ystem.out.println("######NOW I DELETE ALL PLACES######\n\n");
+        //this.placeRepository.deleteAll();
+        //this.typeRepository.deleteAll();
 
-        System.out.println("######ADDING 2 PLACES######");
+        //System.out.println("######ADDING 2 PLACES######");
+
+        typeRepository.save(new Type("ресторан", "категория"));
 
         Place i5 = new Place(
                 "Friends Time",
@@ -42,8 +45,6 @@ public class DbSeeder implements CommandLineRunner {
                 5,
                 1000
         );
-
-        //добавляем все типы в базу. делаем это только один раз!
 
 
         //  List<Place> placesList = new ArrayList<>();

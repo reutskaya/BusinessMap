@@ -1,11 +1,15 @@
 package com.example.BusinessMap.parser;
 
+import com.example.BusinessMap.database.repositories.TypeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StaticMap {
-    static final  Map<String, String> mapOfTypes;
+    public static final Map<String, String> mapOfTypes;
+
     static {
         Map<String, String> map = new HashMap<>();
         //еда
@@ -18,7 +22,7 @@ public class StaticMap {
         map.put("Фитнес-клуб", "fitnes-kluby");
         map.put("Медицинский центр", "medicinskie-centry");
         //покупки
-        map.put("Автомагазины", "avtomagaziny");
+        map.put("Автомагазин", "avtomagaziny");
         map.put("Магазин сантехники", "magaziny-santekhniki");
         map.put("Магазин электроники", "magaziny-elektroniki");
         //красота
@@ -32,13 +36,4 @@ public class StaticMap {
         map.put("Гостиница", "gostinicy");
         mapOfTypes = Collections.unmodifiableMap(map);
     }
-
-   /* public static void addTypesToDB(){
-        mapOfTypes.forEach((key, val) -> typeRepository.save(new Type(key)));
-        List
-
-
-        Type newTypeы = new Type(type);
-        typeRepository.save(newType);
-    }*/
 }

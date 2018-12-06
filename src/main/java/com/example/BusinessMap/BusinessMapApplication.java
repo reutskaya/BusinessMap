@@ -1,5 +1,6 @@
 package com.example.BusinessMap;
 
+import com.example.BusinessMap.parser.Parser;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -24,5 +25,4 @@ public class BusinessMapApplication extends SpringBootServletInitializer {
             }
         };
     }
-
 }

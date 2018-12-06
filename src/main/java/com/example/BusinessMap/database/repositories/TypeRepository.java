@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface TypeRepository extends MongoRepository<Type, String> {
     List<Type> findByCategory(String category);
-
 }

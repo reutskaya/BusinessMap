@@ -8,6 +8,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.bson.types.ObjectId;
+import org.jetbrains.annotations.Async;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
@@ -15,7 +17,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.geo.Point;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,20 +28,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Configuration
+@EnableScheduling
 public class Parser {
     private static final String API_KEY = "a426df02-396e-4ab5-844a-8c3ce394804d";
 
-    @Autowired
-    private PlaceRepository placeRepository;
-    @Autowired
-    private TypeRepository typeRepository;
+    private final PlaceRepository placeRepository;
+    private final TypeRepository typeRepository;
 
+    @Autowired
     public Parser(final PlaceRepository placeRepository, final TypeRepository typeRepository) {
         this.placeRepository = placeRepository;
         this.typeRepository = typeRepository;
+
     }
 
-    public void parse(){
+    //@Scheduled(cron = "0 15 10 0/30 ? ?") //30 числа каждого месяца в 10:15
+    @Scheduled(cron = "0 58 1 7 12 6")
+    public void parse() {
         StaticMap.mapOfTypes.forEach(this::parseType);
     }
 
@@ -47,9 +56,15 @@ public class Parser {
         Point point = null;
         Elements organisations, addresses;
         List<Place> placesAlreadyExist = this.placeRepository.findAll();
-        List<Place> newPlacesToAdd = new ArrayList<>();
+        List<Place> placeListToAdd = new ArrayList<>();
+        List<Type> typeList = this.typeRepository.findAll();
 
-
+        ObjectId typeId = null;
+        for (Type t : typeList) {
+            if(t.getName().equals(typeName)){
+                typeId = new ObjectId(t.getId());
+            }
+        }
 
         //определяем, сколько страниц выдал поиск по данному типу
         int lastPage = 0;
@@ -63,7 +78,7 @@ public class Parser {
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();
         }
-// посмотреть cron triggers + Java CRON (Unix)
+
         //парсим и добавляем в базу
         int i = 1;
         do {
@@ -91,13 +106,13 @@ public class Parser {
                     Place newPlace = new Place(
                             name.text(),
                             point,
-                            new Type(typeName, "cate"),
+                            typeId,
                             rating,
                             0);
-                    if(placesAlreadyExist.contains(newPlace)){
+                    if (placesAlreadyExist.contains(newPlace)) {
                         i++;
                     } else {
-                        newPlacesToAdd.add(newPlace);
+                        placeListToAdd.add(newPlace);
                     }
                 }
             } catch (NullPointerException | IOException e) {
@@ -107,7 +122,7 @@ public class Parser {
             i++;
         } while (i < lastPage);
 
-        this.placeRepository.saveAll(newPlacesToAdd);
+        this.placeRepository.saveAll(placeListToAdd);
     }
 
     private double getRating(@NotNull Elements organisations, int k) {

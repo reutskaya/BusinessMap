@@ -4,11 +4,16 @@ import com.example.BusinessMap.database.entity.Type;
 import com.example.BusinessMap.database.entity.Place;
 import com.example.BusinessMap.database.repositories.PlaceRepository;
 import com.example.BusinessMap.database.repositories.TypeRepository;
+import com.example.BusinessMap.parser.Parser;
 import com.example.BusinessMap.parser.StaticMap;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class DbSeeder implements CommandLineRunner {
@@ -30,22 +35,17 @@ public class DbSeeder implements CommandLineRunner {
         System.out.println("###################################\n\n");*/
 
         // drop all places
-        //ystem.out.println("######NOW I DELETE ALL PLACES######\n\n");
         //this.placeRepository.deleteAll();
-        //this.typeRepository.deleteAll();
-
-        //System.out.println("######ADDING 2 PLACES######");
-
-        typeRepository.save(new Type("ресторан", "категория"));
+        this.typeRepository.deleteAll();
+        typeRepository.saveAll(typesToAdd());
 
         Place i5 = new Place(
                 "Friends Time",
                 new Point(59.935939, 30.359860),
-                new Type("Karaoke", "Entertaiment"),
+                new ObjectId("5c097053ad2b3d17fc2d81eb"),
                 5,
                 1000
         );
-
 
         //  List<Place> placesList = new ArrayList<>();
         //   placesList.add(i5);
@@ -58,10 +58,53 @@ public class DbSeeder implements CommandLineRunner {
 
 
         //List<Type> types = typeRepository.findAll();
-
         //System.out.println("######PLACES LIST AFTER ADDING######");
         //   System.out.println(Querys.getPlaces(placeRepository, typeRepository));
         //System.out.println("###################################\n\n");
+    }
+
+    private static List<Type> typesToAdd() {
+        List<Type> typeListToAdd = new ArrayList<>();
+        StaticMap.mapOfTypes.forEach((key, value) -> {
+            switch (key) {
+                case "Cafe":
+                case "Ресторан":
+                case "Бар":
+                case "Булочная": {
+                    typeListToAdd.add(new Type(key, "Еда"));
+                    break;
+                }
+                case "Аптека":
+                case "Фитнес-клуб":
+                case "Медицинский центр": {
+                    typeListToAdd.add(new Type(key, "Здоровье"));
+                    break;
+                }
+                case "Автомагазин":
+                case "Магазин сантехники":
+                case "Магазин электроники": {
+                    typeListToAdd.add(new Type(key, "Покупки"));
+                    break;
+                }
+                case "Салон красоты":
+                case "Парикмахерская": {
+                    typeListToAdd.add(new Type(key, "Красота"));
+                    break;
+                }
+                case "Парк аттракционов":
+                case "Зоопарк": {
+                    typeListToAdd.add(new Type(key, "Развлечения"));
+                    break;
+                }
+                case "Хостел":
+                case "Гостиница": {
+                    typeListToAdd.add(new Type(key, "Гостиницы"));
+                    break;
+                }
+                default:
+            }
+        });
+        return typeListToAdd;
     }
 
 }

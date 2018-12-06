@@ -28,8 +28,8 @@ public class Querys {
 
     public static String getPlaces(PlaceRepository placeRepository, TypeRepository typeRepository, double x, double y, int km
     ) {
-        JsonArray mainObject = new JsonArray();// создаем главный объект
-        List<String> category = Arrays.asList("Food", "Entertainment", "Hotel", "Store", "Beauty", "Health");
+        JsonArray mainObject = new JsonArray(); // создаем главный объект
+        List<String> category = Arrays.asList("Еда", "Развлечения", "Гостиницы", "Покупки", "Красота", "Здоровье");
 
         String rez = "";
         int sumPlace = 0;
@@ -37,33 +37,32 @@ public class Querys {
         double reit = 0;
         double price = 0;
         Point point = new Point(x, y);
-      
-                // например 59.932229, 30.330791
+
+        // например 59.932229, 30.330791
         Distance distance = new Distance(km, Metrics.KILOMETERS);
-                // например 50
+        // например 50
         List<Place> places = placeRepository.findByLocationNear(point, distance);
         for (int f = 0; f < category.size(); f++) {
             JsonArray array = new JsonArray();
             JsonObject rootObject = new JsonObject(); // создаем главный объект
-
             List<Type> bisenessTypes = typeRepository.findByCategory(category.get(f));
-            System.out.println(bisenessTypes.size());
-                rootObject.addProperty("name", category.get(f));
-                rootObject.addProperty("types", 0);
-                rootObject.addProperty("name", category.get(f));
+            rootObject.addProperty("name", category.get(f));
+            rootObject.addProperty("types", 0);
+            rootObject.addProperty("name", category.get(f));
+
 
             for (int i = 0; i < bisenessTypes.size(); i++) {
                 JsonObject childObject = new JsonObject(); // создаем объект Type
-                String type = bisenessTypes.get(i).getName();
+                String type = bisenessTypes.get(i).getId();
                 for (int q = 0; q < places.size(); q++) {
-                    String place = places.get(q).getType();
+                    String place = places.get(q).getType().toString();
                     if (type.equals(place)) {
                         sumPlace = sumPlace + 1;
                         reit = reit + places.get(q).getRating();
                         price = price + places.get(q).getPrice();
+
                     }
-                        //   builder.append("[").append(type).append(" col:").append(sumPlace);
-                    childObject.addProperty("name", type);
+                    childObject.addProperty("name", bisenessTypes.get(i).getName());
                     childObject.addProperty("col", sumPlace);
                     if (reit / sumPlace > 0) {
                         if (price / sumPlace > 0) {
@@ -85,6 +84,7 @@ public class Querys {
                     reit = 0;
                     price = 0;
                 }
+
                 sumType = sumType + sumPlace;
                 sumPlace = 0;
                 reit = 0;

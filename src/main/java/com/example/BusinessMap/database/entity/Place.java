@@ -1,5 +1,6 @@
 package com.example.BusinessMap.database.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -13,7 +14,8 @@ public class Place {
     private String name;
     //   @Indexed(name = "location_index", direction = )
     private Point location;
-    private Type type;
+    private ObjectId type;
+    //  private Type type;
     private double rating;
     @Indexed(direction = IndexDirection.ASCENDING)
     private int price;
@@ -21,7 +23,7 @@ public class Place {
     protected Place(){
     }
 
-    public Place( String name, Point location, Type type, double rating, int price){
+    public Place( String name, Point location, ObjectId type, double rating, int price){
 
         this.name = name;
         this.location = location;
@@ -54,11 +56,11 @@ public class Place {
         this.location = location;
     }
 
-    public String getType() {
-        return type.getName();
+    public ObjectId getType() {
+        return type;
     }
 
-    public void setBisenessType(Type type) {
+    public void setType(ObjectId type) {
         this.type = type;
     }
 

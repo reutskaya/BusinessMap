@@ -1,15 +1,14 @@
 package com.example.BusinessMap.parser;
 
-import com.example.BusinessMap.database.entity.Place;
-import com.example.BusinessMap.database.entity.Type;
-import com.example.BusinessMap.database.repositories.PlaceRepository;
-import com.example.BusinessMap.database.repositories.TypeRepository;
+import com.example.BusinessMap.entity.Place;
+import com.example.BusinessMap.entity.Type;
+import com.example.BusinessMap.repositories.PlaceRepository;
+import com.example.BusinessMap.repositories.TypeRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.bson.types.ObjectId;
-import org.jetbrains.annotations.Async;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
@@ -24,9 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
 @EnableScheduling

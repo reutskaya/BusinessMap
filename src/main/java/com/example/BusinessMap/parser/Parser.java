@@ -16,17 +16,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.geo.Point;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
-@EnableScheduling
 public class Parser {
     private static final String API_KEY = "a426df02-396e-4ab5-844a-8c3ce394804d";
 
@@ -37,11 +33,10 @@ public class Parser {
     public Parser(final PlaceRepository placeRepository, final TypeRepository typeRepository) {
         this.placeRepository = placeRepository;
         this.typeRepository = typeRepository;
-
     }
 
-    //@Scheduled(cron = "0 15 10 0/30 ? ?") //30 числа каждого месяца в 10:15
-    @Scheduled(cron = "0 58 1 7 12 6")
+    //@Scheduled(cron = "0 58 1 7 12 6")
+    @Scheduled(cron = "0 15 10 0/30 ? ?") //30 числа каждого месяца в 10:15
     public void parse() {
         StaticMap.mapOfTypes.forEach(this::parseType);
     }
@@ -58,7 +53,7 @@ public class Parser {
 
         ObjectId typeId = null;
         for (Type t : typeList) {
-            if(t.getName().equals(typeName)){
+            if (t.getName().equals(typeName)) {
                 typeId = new ObjectId(t.getId());
             }
         }

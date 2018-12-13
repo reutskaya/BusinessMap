@@ -6,6 +6,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const sourceMapEnabled = isProduction
   ? config.build.productionSourceMap
   : config.dev.cssSourceMap;
+const env = require('./webpack.prod.conf');
 
 module.exports = {
   loaders: utils.cssLoaders({
@@ -17,9 +18,18 @@ module.exports = {
   transformToRequire: {
     video: ['src', 'poster'],
     source: 'src',
-    img: ['src', 'url'],
-    image: 'xlink:href'
+    img: ['src', 'url("")'],
+    image: 'url:href'
   },
+
+  test: /\.(png|jpe?g|gif)(\?.*)?$/,
+  loader: 'url-loader',
+  options: {
+    limit: 10000,
+    name: utils.assetsPath('img/[name].[hash:7].[ext]'),
+    publicPath: env === 'production' ? '../../' : '/'
+  },
+
   module: {
     rules: [
       {

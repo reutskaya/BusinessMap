@@ -1,3 +1,4 @@
+/*
 package com.example.BusinessMap.parser;
 
 import com.example.BusinessMap.repositories.PlaceRepository;
@@ -9,12 +10,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-public class ParserApplication {
+public class ParserConfiguration {
     private final PlaceRepository placeRepository;
     private final TypeRepository typeRepository;
 
     @Autowired
-    public ParserApplication(final PlaceRepository placeRepository, final TypeRepository typeRepository) {
+    public ParserConfiguration(final PlaceRepository placeRepository, final TypeRepository typeRepository) {
         this.placeRepository = placeRepository;
         this.typeRepository = typeRepository;
     }
@@ -25,3 +26,4 @@ public class ParserApplication {
         return new Parser(placeRepository, typeRepository);
     }
 }
+*/

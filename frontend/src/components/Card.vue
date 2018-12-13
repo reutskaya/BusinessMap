@@ -1,12 +1,13 @@
+<!--
 <template>
   <div id="card">
     <img v-bind:src="createImagePath" height="325" width="440"/>
     <h4 @click="toggle"><span>{{ category.name }}</span></h4>
     <transition name="fade">
       <div class="rectangle" v-if="visible"><div class="dot" @click="toggle"><img src="../assets/close.jpg"
-                                                                                  height="30" width="30" alt="../assets/background404"/></div><br><br>
+                                                                                  height="30" width="30"/></div><br><br>
         <div id="text" v-bind:key="type.name" v-for="type in category.types">
-          <h5>Тип бизнеса: {{ type.name }}, количество: {{ type.col }}, средний рейтинг: {{ type.reit }}, средний чек: {{ type.price }}.</h5></div></div><br>
+          <h5><p>{{ type.name }}, их количество: {{ type.col }},</p> <p class="body"> средний рейтинг: {{ type.reit }}, средний чек: {{ type.price }}.</p></h5></div></div><br>
     </transition>
   </div>
 </template>
@@ -52,9 +53,9 @@
     top: -325px;
     width: 440px;
     height: 325px;
-    background: #C4C4C4;
+    background: #E5E5E5;
     z-index: 100;
-    border-width: 5px;
+    border: 1px ridge black;
   }
   .dot {
     position: absolute;
@@ -80,18 +81,24 @@
     color:#fff;
     padding:10px;
     background-color:rgba(0,0,0,.3);
+    text-shadow: black 0 0 2px;
+    text-align: left;
   }
   h4 span {
-    font			: bold 24px/45px Helvetica, Sans-Serif;
-    letter-spacing		: -1px;
+    font: bold 24px/45px Merriweather, serif;
   }
   h4:hover {
     color: #ffe222; /* Цвет текста */
-    background: #fff; /* Цвет фона */
+    background: #E5E5E5; /* Цвет фона */
   }
   h5{
     margin: 10px;
     text-align: left;
     font-size: 15px;
   }
+  p {margin:0px;}
+  p.body {
+    text-indent: 5em;
+  }
 </style>
+-->

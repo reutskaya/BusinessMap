@@ -88,14 +88,14 @@ if (process.env.NODE_ENV === 'development') {
 
 
 module.exports = {
-  entry: './src/main.js',
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.js'
-  },
-  dev: {
 
+  dev: {
+    entry: path.resolve(__dirname, '../src/main.js'),
+    /*output: {
+      path: path.resolve(__dirname, '../dist'),
+      publicPath: '../dist/',
+      filename: 'build.js'
+    },*/
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
@@ -126,6 +126,12 @@ module.exports = {
   },
 
   build: {
+    /*entry: path.resolve(__dirname, '../src/main.js'),
+    output: {
+      path: path.resolve(__dirname, '../dist'),
+      publicPath: '../dist/',
+      filename: 'build.js'
+    },*/
     // Template for index.html
     index: path.resolve(__dirname, '../../src/main/resources/static/index.html'),
 

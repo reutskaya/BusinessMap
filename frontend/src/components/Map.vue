@@ -55,9 +55,14 @@
      <b-button class="btn" v-on:click="find">
        <span id="button-text">Анализ области</span>
      </b-button>
-     <div v-if="response != null">
-       <card v-bind:category="parseCategory('Food')"/>
-     </div>
+     <!--<div id="cards" v-if="response != null">
+       <card v-bind:category="parseCategory('Еда') "/>
+       <card v-bind:category="parseCategory('Развлечения') "/>
+       <card v-bind:category="parseCategory('Гостиницы') "/>
+       <card v-bind:category="parseCategory('Покупки') "/>
+       <card v-bind:category="parseCategory('Красота') "/>
+       <card v-bind:category="parseCategory('Здоровье') "/>
+     </div>-->
    </div>
 </template>
 
@@ -126,6 +131,7 @@
       select: function (r) {
         this.radius = r
       },
+
       find : function () {
         axios
           .get(`http://localhost:8080/places/59.932229/30.330791/50`)
@@ -138,7 +144,6 @@
           })[0]
         }
       }
-
     }
   }
 </script>

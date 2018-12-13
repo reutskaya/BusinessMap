@@ -7,21 +7,38 @@ import com.example.BusinessMap.repositories.TypeRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class PlaceService {
     private List<Place> placeList;
     private String PlacesInformation;
 
-    public List<Place> getPlaceList(PlaceRepository placeRepository, double x, double y, int km) {
+    final private PlaceRepository placeRepository;
+    final private TypeRepository typeRepository;
+
+    @Autowired
+    public PlaceService(PlaceRepository placeRepository, TypeRepository typeRepository) {
+        this.placeRepository = placeRepository;
+        this.typeRepository = typeRepository;
+    }
+
+    public List<Place> getAllPlaces() {
+        this.placeRepository.findAll();
+        return placeList;
+    }
+
+    public List<Place> getPlaceList(double x, double y, int km) {
         Point point = new Point(x, y);
         Distance distance = new Distance(km, Metrics.KILOMETERS);
-        List<Place> places = placeRepository.findByLocationNear(point, distance);
+        placeList = this.placeRepository.findByLocationNear(point, distance);
         return placeList;
     }
 
@@ -29,13 +46,15 @@ public class PlaceService {
         this.placeList = placeList;
     }
 
-    public String getPlacesInformation(PlaceRepository placeRepository, TypeRepository typeRepository, double x, double y, int km) {
+    public String getPlacesInformation(double x, double y, int km) {
         JsonArray mainObject = new JsonArray(); // создаем главный объект
         List<String> category = Arrays.asList("Еда", "Развлечения", "Гостиницы", "Покупки", "Красота", "Здоровье");
 
         String rez = "";
         int sumPlace = 0;
         int sumType = 0;
+        double reitType = 0;
+        double priceType = 0;
         double reit = 0;
         double price = 0;
         Point point = new Point(x, y);
@@ -43,11 +62,11 @@ public class PlaceService {
         // например 59.932229, 30.330791
         Distance distance = new Distance(km, Metrics.KILOMETERS);
         // например 50
-        List<Place> places = placeRepository.findByLocationNear(point, distance);
+        List<Place> places = this.placeRepository.findByLocationNear(point, distance);
         for (int f = 0; f < category.size(); f++) {
             JsonArray array = new JsonArray();
             JsonObject rootObject = new JsonObject(); // создаем главный объект
-            List<Type> bisenessTypes = typeRepository.findByCategory(category.get(f));
+            List<Type> bisenessTypes = this.typeRepository.findByCategory(category.get(f));
             rootObject.addProperty("name", category.get(f));
             rootObject.addProperty("types", 0);
             rootObject.addProperty("name", category.get(f));
@@ -85,15 +104,18 @@ public class PlaceService {
                 }
 
                 sumType = sumType + sumPlace;
+                reitType = reitType + reit;
+                priceType = priceType + price;
                 sumPlace = 0;
                 reit = 0;
                 price = 0;
                 array.add(childObject);
             }
-
-            rootObject.addProperty("totalCol", sumType);
+            QualityAssessment(rootObject, sumType, reitType/sumType, priceType/sumType);
             rootObject.add("types", array); // сохраняем дочерний объект в поле "type"
             sumType = 0;
+            reitType = 0;
+            priceType = 0;
             mainObject.add(rootObject);
             Gson gson = new Gson();
             PlacesInformation = gson.toJson(mainObject); // генерация json строки
@@ -103,6 +125,66 @@ public class PlaceService {
 
     public void setPlacesInformation(String placesInformation) {
         PlacesInformation = placesInformation;
+    }
+
+    public JsonObject QualityAssessment(JsonObject rootObject, int sumType, double averageReit, double averagePrice) {
+        int quality = 0;
+        StringBuilder builder = new StringBuilder();
+        if (sumType>0){
+            if (sumType<=5){
+                rootObject.addProperty("reitCol", 1);
+                builder.append("На выбраной вами области мало мест данной категории. ");
+            }
+            if (sumType>5 & sumType<10){
+                rootObject.addProperty("reitCol", 2);
+                builder.append("На выбраной вами области достаточно мест данной категории. ");
+            }
+            if (sumType>=10){
+                rootObject.addProperty("reitCol", 3);
+                builder.append("На выбраной вами области много мест данной категории. ");
+
+            }} else {
+            rootObject.addProperty("reitCol", 0);
+            builder.append("На выбраной вами области нет мест данной категории. ");
+        }
+
+        if (averageReit>0){
+            if (averageReit<=2){
+                quality = 3;
+                builder.append("Их рейтинг низкий и ");
+            }
+            if (averageReit>2 & averageReit<4){
+                quality = 2;
+                builder.append("Их рейтинг средний и ");
+            }
+            if (averageReit>=4){
+                quality = 1;
+                builder.append("Их рейтинг высокий и ");
+            }} else {
+            builder.append("Нет информации о их рейтинге и ");
+        }
+
+        if(averagePrice > 0) {
+            if (averagePrice<=400){
+                if (quality <= 2){
+                    quality = quality + 1;}
+                builder.append("чек низкий.");
+            }
+            if (averagePrice>400 & averagePrice<800){
+                builder.append("чек средний.");
+            }
+            if (averagePrice>=800){
+                if (quality >= 2){
+                    quality = quality -1;}
+                builder.append("чек высокий.");
+
+            }} else {
+            builder.append("нет информации о среднем чеке.");
+        }
+
+        rootObject.addProperty("quality", quality);
+        rootObject.addProperty("verdict", builder.toString());
+        return rootObject;
     }
 
 }

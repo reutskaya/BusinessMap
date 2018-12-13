@@ -31,10 +31,29 @@ module.exports = {
         async: 'vendor-async',
         children: true,
         minChunks: 3
+      },
+      {
+        name: 'vendor',
+        minChunks (module) {
+          // any required modules inside node_modules are extracted to vendor
+          return (
+            module.resource &&
+            /\.js$/.test(module.resource) &&
+            module.resource.indexOf(
+              path.join(__dirname, '../node_modules')
+            ) === 0
+          )
+        }
       }]
   }};
 
 const webpackConfig = merge(baseWebpackConfig, {
+  entry: path.resolve(__dirname, '../src/main.js'),
+  /*output: {
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '../dist/',
+    filename: 'build.js'
+  },*/
   module: {
     rules: [
       {
@@ -99,6 +118,9 @@ const webpackConfig = merge(baseWebpackConfig, {
       sourceMap: config.build.productionSourceMap,
       parallel: true
     }),*/
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    }),
 
     new UglifyJsPlugin({
       cache: true,
@@ -108,7 +130,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         ecma: 6,
         mangle: true
       },
-      sourceMap: true
+      sourceMap: config.build.productionSourceMap
     }),
 
     // extract css into its own file
@@ -153,8 +175,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // copy custom static assets
     new CopyWebpackPlugin([
       {
-        from: path.resolve(__dirname, '../dist'),
-        to: config.build.assetsRoot,
+        from: path.resolve(__dirname, '../static'),
+        to: config.build.assetsSubDirectory,
 
         ignore: ['.*']
       }

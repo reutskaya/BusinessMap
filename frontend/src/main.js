@@ -5,10 +5,10 @@ import router from './router'
 
 
 //Bootstrap
-//import BootstrapVue from 'bootstrap-vue'
-//import 'bootstrap/dist/css/bootstrap.css'
-//import 'bootstrap-vue/dist/bootstrap-vue.css'
-//Vue.use(BootstrapVue);
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+Vue.use(BootstrapVue);
 
 //Yandex-Maps
 import YmapPlugin from 'vue-yandex-maps'

@@ -7,7 +7,7 @@
           bottom: 86.97%;">
      </div>
      <yandex-map
-       id="Ymap"
+       id="yandexMap"
        :coords="[59.9386300, 30.3141300]"
        zoom="12"
        :cluster-options="{
@@ -17,17 +17,27 @@
        :controls="['fullscreenControl', 'geolocationControl', 'searchControl', 'zoomControl']"
        :placemarks="placemarks"
        map-type="map"
-       @map-was-initialized
+       v-on:click="clickMap"
+       @map-was-initialized="init"
      >
+       <ymap-marker
+         marker-id="центр области"
+         marker-type="placemark"
+         :coords="[54.7, 39.7]"
+         hint-content="центр области"
+         :balloon="{header: 'header', body: 'body', footer: 'footer'}"
+         :icon="{color: 'green', glyph: 'cinema'}"
+         cluster-name="1"
+       ></ymap-marker>
        <ymap-marker
          marker-id="1"
          marker-type="circle"
-         :coords="[54.62896654088406, 39.731893822753904]"
-         circle-radius="1000"
-         hint-content="Hint content 1"
+         :coords="[59.9386300, 30.3141300]"
+         :circle-radius="+radToMetres(radius)"
+         hint-content="выбранная область"
          :marker-fill="{color: '#000000', opacity: 0.4}"
-         :marker-stroke="{color: '#ffe222', width: 5}"
-         :balloon="{header: 'header', body: 'body', footer: 'footer'}"
+         :marker-stroke="{color: '#ffe222', width: 3}"
+         :balloon="{header: 'Санкт-Петербург', body: 'выбранная область для анализа', footer: ''}"
        ></ymap-marker>
 
      </yandex-map>
@@ -55,14 +65,14 @@
      <b-button class="btn" v-on:click="find">
        <span id="button-text">Анализ области</span>
      </b-button>
-     <!--<div id="cards" v-if="response != null">
+     <div id="cards" v-if="response != null">
        <card v-bind:category="parseCategory('Еда') "/>
        <card v-bind:category="parseCategory('Развлечения') "/>
        <card v-bind:category="parseCategory('Гостиницы') "/>
        <card v-bind:category="parseCategory('Покупки') "/>
        <card v-bind:category="parseCategory('Красота') "/>
        <card v-bind:category="parseCategory('Здоровье') "/>
-     </div>-->
+     </div>
    </div>
 </template>
 
@@ -104,19 +114,18 @@
 
   // Добавляем круг на карту.
   mapa.geoObjects.add(myCircle);*/
-
   export default {
     name: 'map-area',
-    components: {Card},
+    components: {Card, yandexMap},
     data()
     {
       return {
         placemarks: [
           {
-            coords: [54.8, 39.8],
+            coords: [59.9386300, 30.3141300],
             properties: {}, // define properties here
             options: {}, // define options here
-            clusterName: "1",
+            clusterName: "центр области",
             balloonTemplate: '<div>"Your custom template"</div>' ,
             callbacks: { click: function() {} }
           }
@@ -128,6 +137,16 @@
       }
     },
     methods:{
+      init: function(){
+        myMap = new yandexMap.Map("map", {
+          center: [59.9386300, 30.3141300],
+          zoom: 12
+        },
+          {
+            balloonMaxWidth: 200,
+            searchControlProvider: 'yandex#search'
+          })
+      },
       select: function (r) {
         this.radius = r
       },
@@ -143,9 +162,40 @@
             return item.name == category;
           })[0]
         }
+      },
+      radToMetres: function(rad){
+        return +rad*1000;
+      },
+      /*parseCoords : function () {
+        if (this.response!= null){
+          return this.response.filter(function (item) {
+            return item.name == category;
+          })[0]
+        }
+      },*/
+      clickMap : function () {
+        if (!myMap.balloon.isOpen()) {
+          var coords = axios.get('https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=a426df02-396e-4ab5-844a-8c3ce394804d"\n');
+          myMap.balloon.open(coords, {
+            contentHeader:'Событие!',
+            contentBody:'<p>Кто-то щелкнул по карте.</p>' +
+              '<p>Координаты щелчка: ' + [
+                coords[0].toPrecision(6),
+                coords[1].toPrecision(6)
+              ].join(', ') + '</p>',
+            contentFooter:'<sup>Щелкните еще раз</sup>'
+          });
+        }
+        else {
+          myMap.balloon.close();
+        }
       }
     }
   }
+
+ /* #Ymap.events.add('click', function (e) {
+
+  });*/
 </script>
 
 <style scoped>
@@ -196,7 +246,7 @@
     background: #F8D701;
   }
 
-  #Ymap{
+  #yandexMap{
     position: absolute;
     left: 0%;
     right: 38.19%;

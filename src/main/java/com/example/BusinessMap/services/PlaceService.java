@@ -31,8 +31,7 @@ public class PlaceService {
     }
 
     public List<Place> getAllPlaces() {
-        this.placeRepository.findAll();
-        return placeList;
+        return this.placeRepository.findAll();
     }
 
     public List<Place> getPlaceList(double x, double y, int km) {
@@ -66,24 +65,24 @@ public class PlaceService {
         for (int f = 0; f < category.size(); f++) {
             JsonArray array = new JsonArray();
             JsonObject rootObject = new JsonObject(); // создаем главный объект
-            List<Type> bisenessTypes = this.typeRepository.findByCategory(category.get(f));
+            List<Type> types = this.typeRepository.findByCategory(category.get(f));
             rootObject.addProperty("name", category.get(f));
             rootObject.addProperty("types", 0);
             rootObject.addProperty("name", category.get(f));
 
 
-            for (int i = 0; i < bisenessTypes.size(); i++) {
+            for (Type type: types) {
                 JsonObject childObject = new JsonObject(); // создаем объект Type
-                String type = bisenessTypes.get(i).getId();
-                for (int q = 0; q < places.size(); q++) {
-                    String place = places.get(q).getType().toString();
-                    if (type.equals(place)) {
+                String bisenessType = type.getId();
+                for (Place place: places) {
+                    String placeType = place.getType().toString();
+                    if (placeType.equals(bisenessType)) {
                         sumPlace = sumPlace + 1;
-                        reit = reit + places.get(q).getRating();
-                        price = price + places.get(q).getPrice();
+                        reit = reit + place.getRating();
+                        price = price + place.getPrice();
 
                     }
-                    childObject.addProperty("name", bisenessTypes.get(i).getName());
+                    childObject.addProperty("name", type.getName());
                     childObject.addProperty("col", sumPlace);
                     if (reit / sumPlace > 0) {
                         if (price / sumPlace > 0) {
@@ -111,7 +110,7 @@ public class PlaceService {
                 price = 0;
                 array.add(childObject);
             }
-            QualityAssessment(rootObject, sumType, reitType/sumType, priceType/sumType);
+            QualityAssessment(rootObject, sumType, reitType / sumType, priceType / sumType);
             rootObject.add("types", array); // сохраняем дочерний объект в поле "type"
             sumType = 0;
             reitType = 0;
@@ -130,55 +129,61 @@ public class PlaceService {
     public JsonObject QualityAssessment(JsonObject rootObject, int sumType, double averageReit, double averagePrice) {
         int quality = 0;
         StringBuilder builder = new StringBuilder();
-        if (sumType>0){
-            if (sumType<=5){
+        if (sumType > 0) {
+            if (sumType <= 5) {
                 rootObject.addProperty("reitCol", 1);
                 builder.append("На выбраной вами области мало мест данной категории. ");
             }
-            if (sumType>5 & sumType<10){
+            if (sumType > 5 & sumType < 10) {
                 rootObject.addProperty("reitCol", 2);
                 builder.append("На выбраной вами области достаточно мест данной категории. ");
             }
-            if (sumType>=10){
+            if (sumType >= 10) {
                 rootObject.addProperty("reitCol", 3);
                 builder.append("На выбраной вами области много мест данной категории. ");
 
-            }} else {
-            rootObject.addProperty("reitCol", 0);
+            }
+        } else {
+            rootObject.addProperty("reitCol", 1);
             builder.append("На выбраной вами области нет мест данной категории. ");
         }
 
-        if (averageReit>0){
-            if (averageReit<=2){
+        if (averageReit > 0) {
+            if (averageReit <= 2) {
                 quality = 3;
                 builder.append("Их рейтинг низкий и ");
             }
-            if (averageReit>2 & averageReit<4){
+            if (averageReit > 2 & averageReit < 4) {
                 quality = 2;
                 builder.append("Их рейтинг средний и ");
             }
-            if (averageReit>=4){
+            if (averageReit >= 4) {
                 quality = 1;
                 builder.append("Их рейтинг высокий и ");
-            }} else {
+            }
+        } else {
+            quality = 3;
             builder.append("Нет информации о их рейтинге и ");
+
         }
 
-        if(averagePrice > 0) {
-            if (averagePrice<=400){
-                if (quality <= 2){
-                    quality = quality + 1;}
+        if (averagePrice > 0) {
+            if (averagePrice <= 400) {
+                if (quality <= 2) {
+                    quality = quality + 1;
+                }
                 builder.append("чек низкий.");
             }
-            if (averagePrice>400 & averagePrice<800){
+            if (averagePrice > 400 & averagePrice < 800) {
                 builder.append("чек средний.");
             }
-            if (averagePrice>=800){
-                if (quality >= 2){
-                    quality = quality -1;}
+            if (averagePrice >= 800) {
+                if (quality >= 2) {
+                    quality = quality - 1;
+                }
                 builder.append("чек высокий.");
-
-            }} else {
+            }
+        } else {
             builder.append("нет информации о среднем чеке.");
         }
 

@@ -2,6 +2,7 @@ package com.example.BusinessMap.services;
 
 import com.example.BusinessMap.entity.Type;
 import com.example.BusinessMap.entity.Place;
+import com.example.BusinessMap.parser.Parser;
 import com.example.BusinessMap.repositories.PlaceRepository;
 import com.example.BusinessMap.repositories.TypeRepository;
 import com.example.BusinessMap.parser.StaticMap;
@@ -21,10 +22,14 @@ public class DbSeeder implements CommandLineRunner {
     @Autowired
     private TypeRepository typeRepository;
 
-    public DbSeeder(PlaceRepository placeRepository, TypeRepository typeRepository) {
+
+    PlaceService placeService = new PlaceService(placeRepository,typeRepository);
+
+    public DbSeeder(PlaceRepository placeRepository, TypeRepository typeRepository, PlaceService placeService) {
         this.placeRepository = placeRepository;
         this.typeRepository = typeRepository;
     }
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -34,9 +39,9 @@ public class DbSeeder implements CommandLineRunner {
         System.out.println("###################################\n\n");*/
 
         // drop all places
-        //this.placeRepository.deleteAll();
-        this.typeRepository.deleteAll();
-        typeRepository.saveAll(typesToAdd());
+        this.placeRepository.deleteAll();
+        //this.typeRepository.deleteAll();
+        //typeRepository.saveAll(typesToAdd());
 
         Place i5 = new Place(
                 "Friends Time",
@@ -58,7 +63,7 @@ public class DbSeeder implements CommandLineRunner {
 
         //List<Type> types = typeRepository.findAll();
         //System.out.println("######PLACES LIST AFTER ADDING######");
-        //   System.out.println(Querys.getPlaces(placeRepository, typeRepository));
+           System.out.println(placeService.getPlacesInformation(59.932229, 30.330791, 50));
         //System.out.println("###################################\n\n");
     }
 

@@ -8,31 +8,30 @@
      </div>
      <yandex-map
        id="yandexMap"
-       :coords="[59.9386300, 30.3141300]"
+       :coords="mapCoords"
        zoom="12"
        :cluster-options="{
-    1: {clusterDisableClickZoom: true}
+    1: {}
   }"
        :behaviors="['default']"
        :controls="['fullscreenControl', 'geolocationControl', 'searchControl', 'zoomControl']"
        :placemarks="placemarks"
        map-type="map"
-       v-on:click="clickMap"
-       @map-was-initialized="init"
+       @map-was-initialized="onMapInit"
      >
        <ymap-marker
-         marker-id="центр области"
+         marker-id="3"
          marker-type="placemark"
-         :coords="[54.7, 39.7]"
+         :coords="circleCoords"
          hint-content="центр области"
          :balloon="{header: 'header', body: 'body', footer: 'footer'}"
-         :icon="{color: 'green', glyph: 'cinema'}"
+         :icon="{color: 'gray', glyph: 'DotIcon'}"
          cluster-name="1"
        ></ymap-marker>
        <ymap-marker
          marker-id="1"
          marker-type="circle"
-         :coords="[59.9386300, 30.3141300]"
+         :coords="circleCoords"
          :circle-radius="+radToMetres(radius)"
          hint-content="выбранная область"
          :marker-fill="{color: '#000000', opacity: 0.4}"
@@ -80,81 +79,47 @@
   import { yandexMap, ymapMarker } from 'vue-yandex-maps'
   import Card from "./Card"
   import axios from 'axios';
-  /*new Vue({
-    components: { yandexMap, ymapMarker }
-  });*/
 
-/*
-  myCircle = new ymaps.Circle([
-    // Координаты центра круга.
-    [55.76, 37.60],
-    // Радиус круга в метрах.
-    radius
-  ], {
-    // Описываем свойства круга.
-    // Содержимое балуна.
-    balloonContent: "Радиус круга - 10 км",
-    // Содержимое хинта.
-    hintContent: "Подвинь меня"
-  }, {
-    // Задаем опции круга.
-    // Включаем возможность перетаскивания круга.
-    draggable: true,
-    // Цвет заливки.
-    // Последний байт (77) определяет прозрачность.
-    // Прозрачность заливки также можно задать используя опцию "fillOpacity".
-    fillColor: "#DB709377",
-    // Цвет обводки.
-    strokeColor: "#990066",
-    // Прозрачность обводки.
-    strokeOpacity: 0.8,
-    // Ширина обводки в пикселях.
-    strokeWidth: 5
-  });
-
-  // Добавляем круг на карту.
-  mapa.geoObjects.add(myCircle);*/
   export default {
     name: 'map-area',
     components: {Card, yandexMap},
     data()
     {
       return {
-        placemarks: [
-          {
-            coords: [59.9386300, 30.3141300],
-            properties: {}, // define properties here
-            options: {}, // define options here
-            clusterName: "центр области",
-            balloonTemplate: '<div>"Your custom template"</div>' ,
-            callbacks: { click: function() {} }
-          }
-        ],
+        placemarks: [],
+        mapCoords: [59.9386300, 30.3141300],
+        circleCoords: [59.9386300, 30.3141300],
         address: '',
         value: 25,
-        radius:'',
+        radius:'1',
         response: null
       }
     },
     methods:{
-      init: function(){
-        myMap = new yandexMap.Map("map", {
-          center: [59.9386300, 30.3141300],
-          zoom: 12
-        },
-          {
-            balloonMaxWidth: 200,
-            searchControlProvider: 'yandex#search'
-          })
+      onMapClick : function (coords) {
+
+        this.circleCoords = coords
+        this.mapCoords = coords
+        this.placemarks.push({asd:1})
+        this.placemarks.pop()
+      },
+
+      onMapInit : function(map) {
+        var self = this;
+        map.events.add('click', function(e){
+          self.onMapClick(e.get('coords'))
+        })
       },
       select: function (r) {
         this.radius = r
       },
-
+      getRequestText: function ([a, b]) {
+        return String(a) + "/" + String(b) + "/" + String(this.radius)
+      },
       find : function () {
-        axios
-          .get(`http://localhost:8080/places/59.932229/30.330791/50`)
-          .then(response2 => (this.response = response2.data));
+          axios
+            .get("http://localhost:8080/places/" + this.getRequestText(this.circleCoords))
+            .then(response2 => (this.response = response2.data));
       },
       parseCategory : function (category) {
         if (this.response!= null){
@@ -165,37 +130,9 @@
       },
       radToMetres: function(rad){
         return +rad*1000;
-      },
-      /*parseCoords : function () {
-        if (this.response!= null){
-          return this.response.filter(function (item) {
-            return item.name == category;
-          })[0]
-        }
-      },*/
-      clickMap : function () {
-        if (!myMap.balloon.isOpen()) {
-          var coords = axios.get('https://api-maps.yandex.ru/2.1/?lang=ru_RU&amp;apikey=a426df02-396e-4ab5-844a-8c3ce394804d"\n');
-          myMap.balloon.open(coords, {
-            contentHeader:'Событие!',
-            contentBody:'<p>Кто-то щелкнул по карте.</p>' +
-              '<p>Координаты щелчка: ' + [
-                coords[0].toPrecision(6),
-                coords[1].toPrecision(6)
-              ].join(', ') + '</p>',
-            contentFooter:'<sup>Щелкните еще раз</sup>'
-          });
-        }
-        else {
-          myMap.balloon.close();
-        }
       }
     }
   }
-
- /* #Ymap.events.add('click', function (e) {
-
-  });*/
 </script>
 
 <style scoped>
@@ -356,9 +293,8 @@
   }
 
   #cards{
-    top: -15px;
     background: #E5E5E5;
     position: absolute;
-    top: 755px;
+    top: 750px;
   }
 </style>

@@ -16,18 +16,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.solr.core.geo.Point;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Component
-//@EnableScheduling
 public class Parser {
     private static final String API_KEY = "a426df02-396e-4ab5-844a-8c3ce394804d";
 
@@ -40,13 +38,21 @@ public class Parser {
         this.typeRepository = typeRepository;
     }
 
-    //@Scheduled(cron = "0 58 1 7 12 6")
     @Scheduled(cron = "0 15 10 0/30 ? ?") //30 числа каждого месяца в 10:15
     public void parse() {
-        StaticMap.mapOfTypes.forEach(this::parseType);
+        StaticMap.mapOfTypes.forEach((key, value) -> {try {
+            parseType(key, value);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        });
     }
 
-    private void parseType(String typeName, String typeURL) {
+    private void parseType(String typeName, String typeURL) throws IOException {
+        if(new File("./placesRecovery.txt").exists()){
+            File recoveryFile = new File("./placesRecovery.txt");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(recoveryFile)));
+        }
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
         Document doc;
         Element name;
@@ -55,7 +61,9 @@ public class Parser {
         List<Place> placesAlreadyExist = this.placeRepository.findAll();
         List<Place> placeListToAdd = new ArrayList<>();
         List<Type> typeList = this.typeRepository.findAll();
+        final Random random = new Random();
 
+        //определяем тип
         ObjectId typeId = null;
         for (Type t : typeList) {
             if (t.getName().equals(typeName)) {
@@ -80,8 +88,9 @@ public class Parser {
         int i = 1;
         do {
             try {
-                doc = Jsoup.connect("http://spb.spravker.ru/" + typeURL + "/page-" + i)
+                doc = Jsoup.connect("http://spb.spravker.ru/" + typeURL + "/page-" + i)   //HttpStatusException
                         .userAgent(userAgent)
+                        .timeout(120000)
                         .get();
                 //организации
                 organisations = doc.select(".col-left .addresses-list .list-item.hover");
@@ -105,7 +114,7 @@ public class Parser {
                             point,
                             typeId,
                             rating,
-                            0);
+                            random.nextInt(averageCheckBound(typeName)));
                     if (placesAlreadyExist.contains(newPlace)) {
                         i++;
                     } else {
@@ -114,6 +123,17 @@ public class Parser {
                 }
             } catch (NullPointerException | IOException e) {
                 e.printStackTrace();
+                FileWriter writer = new FileWriter(new File("./placesRecovery.txt"));
+                for(Place p : placeListToAdd){
+                    String pName = p.getName();
+                    String pPoint = p.getLocation().toString();
+                    String pTypeId = p.getType().toString();
+                    String pRating = p.getLocation().toString();
+                    int pPrice = p.getPrice();
+                    writer.write(pName + " " + pPoint + " " + pTypeId + " " + pRating + " " + pPrice + "/n");
+                }
+                writer.close();
+                return;
             }
 
             i++;
@@ -124,6 +144,7 @@ public class Parser {
 
     private double getRating(@NotNull Elements organisations, int k) {
         Elements stars;
+        final Random random = new Random();
         stars = organisations.get(k).select(".rating");
         double rating = 0;
         int j = 0;
@@ -136,6 +157,9 @@ public class Parser {
                 stars.select("i").first().remove();
             }
             j++;
+        }
+        if (rating==0){
+            rating = random.nextInt(5);
         }
         return rating;
     }
@@ -181,5 +205,81 @@ public class Parser {
         coords = pos.split(" ");
 
         return new Point(Double.parseDouble(coords[1]), Double.parseDouble(coords[0]));
+    }
+
+    @Contract(pure = true)
+    private static Integer averageCheckBound(@NotNull String typeName){
+        int checkBound = 0;
+        switch (typeName){
+            case "Кафе": {
+                checkBound = 700;
+                break;
+            }
+            case "Ресторан": {
+                checkBound = 3000;
+                break;
+            }
+            case "Бар": {
+                checkBound = 1500;
+                break;
+            }
+            case "Булочная": {
+                checkBound = 300;
+                break;
+            }
+            case "Аптека": {
+                checkBound = 800;
+                break;
+            }
+            case "Фитнес-клуб": {
+                checkBound = 5000;
+                break;
+            }
+            case "Медицинский центр": {
+                checkBound = 7000;
+                break;
+            }
+            case "Автомагазин": {
+                checkBound = 3000;
+                break;
+            }
+            case "Магазин сантехники": {
+                checkBound = 4000;
+                break;
+            }
+            case "Магазин электроники": {
+                checkBound = 7000;
+                break;
+            }
+            case "Салон красоты": {
+                checkBound = 3000;
+                break;
+            }
+            case "Парикмахерская": {
+                checkBound = 3000;
+                break;
+            }
+            case "Парк аттракционов": {
+                checkBound = 700;
+                break;
+            }
+            case "Зоопарк": {
+                checkBound = 600;
+                break;
+            }
+            case "Хостел": {
+                checkBound = 1000;
+                break;
+            }
+            case "Гостиница": {
+                checkBound = 5000;
+                break;
+            }
+            default: {
+                checkBound = 500;
+                break;
+            }
+        }
+        return checkBound;
     }
 }

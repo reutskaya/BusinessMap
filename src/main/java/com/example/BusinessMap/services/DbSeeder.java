@@ -39,9 +39,12 @@ public class DbSeeder implements CommandLineRunner {
         System.out.println("###################################\n\n");*/
 
         // drop all places
-        this.placeRepository.deleteAll();
+        //this.placeRepository.deleteAll();
         //this.typeRepository.deleteAll();
         //typeRepository.saveAll(typesToAdd());
+        /*System.out.println(placeRepository.findByLocation(new  Point(0, 0)));
+        this.placeRepository.deleteAll(placeRepository.findByLocation(new  Point(0, 0)));
+*/
 
         Place i5 = new Place(
                 "Friends Time",
@@ -51,19 +54,18 @@ public class DbSeeder implements CommandLineRunner {
                 1000
         );
 
-        //  List<Place> placesList = new ArrayList<>();
-        //   placesList.add(i5);
-        //   placeRepository.saveAll(placesList);
+        //List<Place> placesList = new ArrayList<>();
+        //placesList.add(i5);
+        //placeRepository.saveAll(placesList);
 
 //        System.out.println(Querys.getOnly(placeRepository, bisenessTypeRepository));
 
-        //Parser parser = new Parser(placeRepository,typeRepository);
-        //parser.parse();
-
+        Parser parser = new Parser(placeRepository,typeRepository);
+        parser.parse();
 
         //List<Type> types = typeRepository.findAll();
         //System.out.println("######PLACES LIST AFTER ADDING######");
-           System.out.println(placeService.getPlacesInformation(59.932229, 30.330791, 50));
+        //   System.out.println(placeService.getPlacesInformation(59.932229, 30.330791, 50));
         //System.out.println("###################################\n\n");
     }
 
@@ -71,7 +73,7 @@ public class DbSeeder implements CommandLineRunner {
         List<Type> typeListToAdd = new ArrayList<>();
         StaticMap.mapOfTypes.forEach((key, value) -> {
             switch (key) {
-                case "Cafe":
+                case "Кафе":
                 case "Ресторан":
                 case "Бар":
                 case "Булочная": {

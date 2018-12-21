@@ -14,14 +14,14 @@
       <div class="rectangle" v-if="visible">
         <div class="dot" @click="toggle">
           <img src="../assets/close.jpg" height="30" width="30"/></div>
-        <br>
         <div id="text" v-bind:key="type.name" v-for="type in category.types">
           <h5><p>{{ type.name }} ({{ type.col }})</p>
             <p class="body">средний рейтинг: {{ type.reit }}</p>
             <p class="body">средний чек: {{ type.price }}</p>
           </h5>
-          <h6>{{ category.verdict }}</h6></div><br>
         </div>
+        <h6>{{ category.verdict }}</h6>
+      </div>
     </transition>
   </div>
 </template>
@@ -150,17 +150,17 @@
   }
 
   h5 {
-    margin: 30px;
+    margin: 20px;
     text-align: left;
     font-size: 15px;
   }
 
   h6{
     position: absolute;
-    margin: 30px;
+    margin: 20px;
     text-align: left;
     font-size: 15px;
-    bottom: 5px;
+    bottom: 10px;
   }
 
   p {

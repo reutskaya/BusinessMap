@@ -20,7 +20,7 @@ import org.springframework.data.solr.core.geo.Point;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,19 +40,35 @@ public class Parser {
 
     @Scheduled(cron = "0 15 10 0/30 ? ?") //30 числа каждого месяца в 10:15
     public void parse() {
-        StaticMap.mapOfTypes.forEach((key, value) -> {try {
-            parseType(key, value);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        StaticMap.mapOfTypes.forEach((key, value) -> {
+            try {
+                parseType(key, value);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 
     private void parseType(String typeName, String typeURL) throws IOException {
-        if(new File("./placesRecovery.txt").exists()){
-            File recoveryFile = new File("./placesRecovery.txt");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(recoveryFile)));
-        }
+        /*if (new File("./placesRecovery.json").exists()) {
+            File recoveryFile = new File("./placesRecovery.json");
+            BufferedReader reader;
+            try {
+                reader = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream(recoveryFile), Charset.forName("UTF-8")));
+                String line = "";
+                line = line.concat(reader.readLine());
+                Gson gson = new Gson();
+                while ((line = reader.readLine()) != null) {
+
+                    System.out.println(gson.fromJson(gson.toJson(line), Place.class));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }*/
+
         String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
         Document doc;
         Element name;
@@ -123,17 +139,16 @@ public class Parser {
                 }
             } catch (NullPointerException | IOException e) {
                 e.printStackTrace();
-                FileWriter writer = new FileWriter(new File("./placesRecovery.txt"));
-                for(Place p : placeListToAdd){
-                    String pName = p.getName();
-                    String pPoint = p.getLocation().toString();
-                    String pTypeId = p.getType().toString();
-                    String pRating = p.getLocation().toString();
-                    int pPrice = p.getPrice();
-                    writer.write(pName + " " + pPoint + " " + pTypeId + " " + pRating + " " + pPrice + "/n");
+                /*FileWriter writer = new FileWriter(new File("./placesRecovery.json"));
+                Gson gson = new Gson();
+                writer.write("[");
+                for(Place place : placeListToAdd){
+                    writer.write(gson.toJson(place));
+                    writer.write(",");
                 }
+                writer.write("]");
                 writer.close();
-                return;
+                return;*/
             }
 
             i++;
@@ -158,7 +173,7 @@ public class Parser {
             }
             j++;
         }
-        if (rating==0){
+        if (rating == 0) {
             rating = random.nextInt(5);
         }
         return rating;
@@ -208,19 +223,15 @@ public class Parser {
     }
 
     @Contract(pure = true)
-    private static Integer averageCheckBound(@NotNull String typeName){
+    private static Integer averageCheckBound(@NotNull String typeName) {
         int checkBound = 0;
-        switch (typeName){
+        switch (typeName) {
             case "Кафе": {
                 checkBound = 700;
                 break;
             }
             case "Ресторан": {
                 checkBound = 3000;
-                break;
-            }
-            case "Бар": {
-                checkBound = 1500;
                 break;
             }
             case "Булочная": {

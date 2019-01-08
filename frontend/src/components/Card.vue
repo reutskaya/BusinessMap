@@ -43,7 +43,7 @@
     },
     computed: {
       createImagePath: function () {
-        return `dist/${this.category.name}.jpg`;
+        return `images/${this.category.name}.jpg`;
       },
       sizeAndColor: function () {
         return `[colorRed, sizeBig]`;

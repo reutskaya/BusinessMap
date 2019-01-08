@@ -34,7 +34,7 @@ public class PlaceService {
         return this.placeRepository.findAll();
     }
 
-    public List<Place> getPlaceList(double x, double y, int km) {
+    public List<Place> getPlaceList(double x, double y, double km) {
         Point point = new Point(x, y);
         Distance distance = new Distance(km, Metrics.KILOMETERS);
         placeList = this.placeRepository.findByLocationNear(point, distance);
@@ -45,7 +45,7 @@ public class PlaceService {
         this.placeList = placeList;
     }
 
-    public String getPlacesInformation(double x, double y, float km) {
+    public String getPlacesInformation(double x, double y, double km) {
         JsonArray mainObject = new JsonArray(); // создаем главный объект
         List<String> category = Arrays.asList("Еда", "Развлечения", "Гостиницы", "Покупки", "Красота", "Здоровье");
 
@@ -75,31 +75,33 @@ public class PlaceService {
                 JsonObject childObject = new JsonObject(); // создаем объект Type
                 String bisenessType = type.getId();
                 for (Place place : places) {
-                    String placeType = place.getType().toString();
-                    if (placeType.equals(bisenessType)) {
-                        sumPlace = sumPlace + 1;
-                        reit = reit + place.getRating();
-                        price = price + place.getPrice();
+                    if(place.getType() != null) {
+                        String placeType = place.getType().toString();
+                        if (placeType.equals(bisenessType)) {
+                            sumPlace = sumPlace + 1;
+                            reit = reit + place.getRating();
+                            price = price + place.getPrice();
 
-                    }
-                    childObject.addProperty("name", type.getName());
-                    childObject.addProperty("col", sumPlace);
-                    if (reit / sumPlace > 0) {
-                        if (price / sumPlace > 0) {
-                            childObject.addProperty("reit", Math.round(reit / sumPlace * 10) / 10D);
-                            childObject.addProperty("price", Math.round(price / sumPlace));
+                        }
+                        childObject.addProperty("name", type.getName());
+                        childObject.addProperty("col", sumPlace);
+                        if (reit / sumPlace > 0) {
+                            if (price / sumPlace > 0) {
+                                childObject.addProperty("reit", Math.round(reit / sumPlace * 10) / 10D);
+                                childObject.addProperty("price", Math.round(price / sumPlace));
+                            } else {
+                                childObject.addProperty("reit", Math.round(reit / sumPlace * 10) / 10D);
+                                childObject.addProperty("price", 0);
+                            }
                         } else {
-                            childObject.addProperty("reit", Math.round(reit / sumPlace * 10) / 10D);
+                            childObject.addProperty("reit", 0);
                             childObject.addProperty("price", 0);
                         }
-                    } else {
-                        childObject.addProperty("reit", 0);
-                        childObject.addProperty("price", 0);
-                    }
  /*                   sumType = sumType + sumPlace;
                     sumPlace = 0;
                     reit = 0;
                     price = 0; */
+                    }
                 }
 
                 sumType = sumType + sumPlace;

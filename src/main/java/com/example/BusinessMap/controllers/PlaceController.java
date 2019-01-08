@@ -24,7 +24,7 @@ public class PlaceController {
 
 
     @GetMapping("/{x}/{y}/{km}")
-    public String getPlacesInformation(@PathVariable("x") double x, @PathVariable("y") double y, @PathVariable("km") int km){
+    public String getPlacesInformation(@PathVariable("x") double x, @PathVariable("y") double y, @PathVariable("km") double km){
         String rez = placeService.getPlacesInformation(x, y, km);
         return rez;
     }

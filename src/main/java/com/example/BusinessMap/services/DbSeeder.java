@@ -1,15 +1,11 @@
 package com.example.BusinessMap.services;
 
 import com.example.BusinessMap.entity.Type;
-import com.example.BusinessMap.entity.Place;
-import com.example.BusinessMap.parser.Parser;
+import com.example.BusinessMap.parser.StaticMap;
 import com.example.BusinessMap.repositories.PlaceRepository;
 import com.example.BusinessMap.repositories.TypeRepository;
-import com.example.BusinessMap.parser.StaticMap;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,40 +29,17 @@ public class DbSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-     /*   System.out.println("######PLACES LIST AT BEGINNING######");
-        System.out.println(placeRepository.findAll());
-        System.out.println("###################################\n\n");*/
-
-        // drop all places
+        // to drop
         //this.placeRepository.deleteAll();
         //this.typeRepository.deleteAll();
+
+        //init types
         //typeRepository.saveAll(typesToAdd());
-        /*System.out.println(placeRepository.findByLocation(new  Point(0, 0)));
-        this.placeRepository.deleteAll(placeRepository.findByLocation(new  Point(0, 0)));
-*/
 
-        Place i5 = new Place(
-                "Friends Time",
-                new Point(59.935939, 30.359860),
-                new ObjectId("5c097053ad2b3d17fc2d81eb"),
-                5,
-                1000
-        );
-
+        // to add place/places
         //List<Place> placesList = new ArrayList<>();
-        //placesList.add(i5);
+        //placesList.add(new Place(...));
         //placeRepository.saveAll(placesList);
-
-//        System.out.println(Querys.getOnly(placeRepository, bisenessTypeRepository));
-
-        Parser parser = new Parser(placeRepository,typeRepository);
-        parser.parse();
-
-        //List<Type> types = typeRepository.findAll();
-        //System.out.println("######PLACES LIST AFTER ADDING######");
-        //   System.out.println(placeService.getPlacesInformation(59.932229, 30.330791, 50));
-        //System.out.println("###################################\n\n");
     }
 
     private static List<Type> typesToAdd() {
@@ -75,7 +48,6 @@ public class DbSeeder implements CommandLineRunner {
             switch (key) {
                 case "Кафе":
                 case "Ресторан":
-                case "Бар":
                 case "Булочная": {
                     typeListToAdd.add(new Type(key, "Еда"));
                     break;

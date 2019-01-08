@@ -1,7 +1,6 @@
 // Импортируем зависимости
 import Vue from 'vue'
 import App from './App'
-import router from './router'
 
 
 //Bootstrap
@@ -16,12 +15,5 @@ Vue.use(YmapPlugin);
 
 // Создаем экземпляр vue
 new Vue({
-// Определяем селектор для корневого компонента
-  el: '#app',
-  // передаем шаблон корневому компоненту
-  template: '<App/>',
-  // Объявляем компоненты, к которым может обращаться корневой компонент;
-  components: { App },
-  // Передаем в роутер экземпляр Vue
-  router
+  render: h => h(App)
 }).$mount('#app');
